@@ -51,7 +51,12 @@ class CoffeeMachine:
                     },
             }
     
-    def __init__(self, water, milk, coffee_beans, disposable_cups, money):
+    def __init__(self,
+                 water: int,
+                 milk: int,
+                 coffee_beans: int,
+                 disposable_cups: int,
+                 money: int):
         self.water = water
         self.milk = milk
         self.coffee_beans = coffee_beans
@@ -63,7 +68,7 @@ class CoffeeMachine:
         command = input('Write action (buy, fill, take, remaining, exit):\n')
         return self.dispatcher(command)
     
-    def dispatcher(self, command):
+    def dispatcher(self, command: str):
         # TODO: Docstring
         commands = {
                 'take': self.take,
@@ -117,7 +122,10 @@ class CoffeeMachine:
         print('I have enough resources, making you a coffee!\n')
         return self.make_drink(ingredients, drink_ingredients, choice)
     
-    def make_drink(self, ingredients, drink_ingredients, choice):
+    def make_drink(self,
+                   ingredients: dict,
+                   drink_ingredients: dict,
+                   choice: int):
         # TODO: Docstring
         for ingredient in sorted(ingredients,
                                  key=lambda y: ingredients[y].get('order')):
@@ -140,7 +148,7 @@ class CoffeeMachine:
         print()
         return self.action()
     
-    def filling_process(self, ingredient, unit):
+    def filling_process(self, ingredient: str, unit: str):
         # TODO: Docstring
         name = ingredient.replace('_', ' ')
         message = f'Write how many {unit} of {name} do you want to add:\n'
