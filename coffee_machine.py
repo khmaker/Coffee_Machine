@@ -1,5 +1,4 @@
 class CoffeeMachine:
-    # TODO: Docstring
     ingredients = {
             'water': {
                     'order': 1,
@@ -51,45 +50,27 @@ class CoffeeMachine:
                     },
             }
     
-    def __init__(self,
-                 water: int,
-                 milk: int,
-                 coffee_beans: int,
-                 disposable_cups: int,
-                 money: int):
+    def __init__(self, water, milk, coffee_beans, disposable_cups, money):
         self.water = water
         self.milk = milk
         self.coffee_beans = coffee_beans
         self.disposable_cups = disposable_cups
         self.money = money
+        self.action()
     
     def action(self):
-        # TODO: Docstring
         command = input('Write action (buy, fill, take, remaining, exit):\n')
-        return self.dispatcher(command)
-    
-    def dispatcher(self, command: str):
-        # TODO: Docstring
-        commands = {
-                'take': self.take,
-                'buy': self.buy,
-                'fill': self.fill,
-                'remaining': self.remaining,
-                'exit': self.exit,
-                }
-        if command not in commands:
-            print('No such action\n')
-            return self.action()
-        return commands.get(command)()
+        if hasattr(self, command):
+            return self.__getattribute__(command)
+        print('No such action\n')
+        return self.action()
     
     def take(self):
-        # TODO: Docstring
         print(f'I gave you ${self.money}\n')
         self.money = 0
         return self.action()
     
     def buy(self):
-        # TODO: Docstring
         menu = self.drinks_menu
         menu_items = ', '.join(f'{n} - {menu[n].get("name")}' for n in menu)
         message = ('What do you want to buy? '
@@ -98,12 +79,11 @@ class CoffeeMachine:
         if choice == 'back':
             return self.action()
         if choice in (str(item) for item in menu):
-            return self.check_ingredients(choice)
+            return self.__check_ingredients(choice)
         print('No such item in menu')
         return self.buy()
     
-    def check_ingredients(self, choice: str):
-        # TODO: Docstring
+    def __check_ingredients(self, choice: str):
         choice = int(choice)
         drink_ingredients = self.drinks_menu[choice].get('ingredients')
         if drink_ingredients is None:
@@ -120,13 +100,9 @@ class CoffeeMachine:
                     return self.action()
         
         print('I have enough resources, making you a coffee!\n')
-        return self.make_drink(ingredients, drink_ingredients, choice)
+        return self.__make_drink(ingredients, drink_ingredients, choice)
     
-    def make_drink(self,
-                   ingredients: dict,
-                   drink_ingredients: dict,
-                   choice: int):
-        # TODO: Docstring
+    def __make_drink(self, ingredients, drink_ingredients, choice):
         for ingredient in sorted(ingredients,
                                  key=lambda y: ingredients[y].get('order')):
             need_ingredient = drink_ingredients.get(ingredient)
@@ -139,17 +115,15 @@ class CoffeeMachine:
         return self.action()
     
     def fill(self):
-        # TODO: Docstring
         ingredients = self.ingredients
         for ingredient in sorted(ingredients,
                                  key=lambda y: ingredients[y].get('order')):
             unit = self.ingredients[ingredient].get('unit')
-            self.filling_process(ingredient, unit)
+            self.__filling_process(ingredient, unit)
         print()
         return self.action()
     
-    def filling_process(self, ingredient: str, unit: str):
-        # TODO: Docstring
+    def __filling_process(self, ingredient, unit):
         name = ingredient.replace('_', ' ')
         message = f'Write how many {unit} of {name} do you want to add:\n'
         amount_of_ingredient = input(message)
@@ -159,14 +133,13 @@ class CoffeeMachine:
                 raise ValueError
         except ValueError:
             print('Only positive integers allowed')
-            return self.filling_process(ingredient, unit)
+            return self.__filling_process(ingredient, unit)
         
         current_amount_of_ingredient = self.__getattribute__(ingredient)
         self.__setattr__(ingredient,
                          current_amount_of_ingredient + amount_of_ingredient)
     
     def remaining(self):
-        # TODO: Docstring
         print(f'The coffee machine has:')
         ingredients = self.ingredients
         for ingredient in sorted(ingredients,
@@ -182,6 +155,4 @@ class CoffeeMachine:
 
 
 if __name__ == '__main__':
-
     a = CoffeeMachine(400, 540, 120, 9, 550)
-    a.action()
