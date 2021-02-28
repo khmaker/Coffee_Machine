@@ -56,12 +56,12 @@ class CoffeeMachine:
         self.coffee_beans = coffee_beans
         self.disposable_cups = disposable_cups
         self.money = money
-        self.action()
     
     def action(self):
         command = input('Write action (buy, fill, take, remaining, exit):\n')
-        if hasattr(self, command):
-            return self.__getattribute__(command)
+        method = self.__getattribute__(command)
+        if callable(method):
+            return method()
         print('No such action\n')
         return self.action()
     
@@ -140,7 +140,7 @@ class CoffeeMachine:
                          current_amount_of_ingredient + amount_of_ingredient)
     
     def remaining(self):
-        print(f'The coffee machine has:')
+        print(f'\nThe coffee machine has:')
         ingredients = self.ingredients
         for ingredient in sorted(ingredients,
                                  key=lambda y: ingredients[y].get('order')):
@@ -156,3 +156,4 @@ class CoffeeMachine:
 
 if __name__ == '__main__':
     a = CoffeeMachine(400, 540, 120, 9, 550)
+    a.action()
